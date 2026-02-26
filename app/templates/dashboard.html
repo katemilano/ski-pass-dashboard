@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Epic vs Ikon Pass Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+      <h2 class="mb-1 text-center py-4"> <b>Epic vs Ikon Pass</b> Comparison</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-body row g-3 align-items-end">
+                        <div>
+                            <h4 class="form-label">Search Area</h4>
+                            <p>Search by either Country or State/Province Abbreviation</p>
+                        </div>
+                        <div>
+                            <label class="form-label">Country</label>
+                            <input id="countrySelect" class="form-control" placeholder="e.g., United States" />              
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">State/Province</label>
+                            <input id="stateSelect" class="form-control" placeholder="e.g., CO" />              
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Recommendation -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Best Option for This Area</h4>
+                        <div class="fs-4" id="best_pass">—</div>
+                        <div class="text-muted" id="best_reason">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: -75px;">
+            <div class="col-md-3">
+            
+            </div>
+            <div class="col-md-9">
+                <div class="card mb-4" style="margin-top: -95px;">
+                    <div class="card-body">
+                    <h4 class="card-title">Resorts in Area: Average Snowfall</h4>
+                    <canvas id="snowfallChart" height="120"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+        <div class="col-md-3">
+        
+        </div>
+        <div class="col-md-4 mx-3">
+          <div class="card ">
+            <div class="card-body">
+              <div class="text-center bg-warning py-2">
+                    <h4 class="">Epic</h4>
+              </div>
+              <div>Resorts: <strong id="epic_resorts">—</strong></div>
+              <div>Avg Snowfall (in): <strong id="epic_snowfall">—</strong></div>
+              <div>Avg Snowfall Days: <strong id="epic_snow_days">—</strong></div>
+              <div>Avg Season 2023–24 (days): <strong id="epic_season">—</strong></div>
+              <div>Avg Skiable Acres: <strong id="epic_acres">—</strong></div>
+              <div>Avg Vertical (ft): <strong id="epic_vertical">—</strong></div>
+              <div>Avg Trails: <strong id="epic_trails">—</strong></div>
+              <div class="mt-2">Regional Score: <strong id="epic_score">—</strong></div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-4 mx-3">
+          <div class="card ">
+            <div class="card-body">
+                <div class="text-center bg-primary py-2">
+                    <h4>Ikon</h4>
+                </div>
+              <div>Resorts: <strong id="ikon_resorts">—</strong></div>
+              <div>Avg Snowfall (in): <strong id="ikon_snowfall">—</strong></div>
+              <div>Avg Snowfall Days: <strong id="ikon_snow_days">—</strong></div>
+              <div>Avg Season 2023–24 (days): <strong id="ikon_season">—</strong></div>
+              <div>Avg Skiable Acres: <strong id="ikon_acres">—</strong></div>
+              <div>Avg Vertical (ft): <strong id="ikon_vertical">—</strong></div>
+              <div>Avg Trails: <strong id="ikon_trails">—</strong></div>
+              <div class="mt-2">Regional Score: <strong id="ikon_score">—</strong></div>
+            </div>
+          </div>
+        </div>
+        </div>
+
+    </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
