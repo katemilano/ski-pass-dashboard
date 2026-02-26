@@ -17,8 +17,8 @@ def run():
         cur.executescript(f.read())
 
     # inserts pass/prices for the passes table
-    cur.execute("INSERT INTO passes VALUES ('Epic', 783)")
-    cur.execute("INSERT INTO passes VALUES ('Ikon', 909)")
+    # cur.execute("INSERT INTO passes VALUES ('Epic', 783)")
+    # cur.execute("INSERT INTO passes VALUES ('Ikon', 909)")
 
     # creates dictionary from CSV becuase effecient and can't change values
     with open(CSV_PATH, newline="", encoding="utf-8") as f:

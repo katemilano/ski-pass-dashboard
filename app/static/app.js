@@ -1,28 +1,21 @@
-// ------------------ STATE / VARIABLES ------------------
+// setting global variables
 let filters = { country: "All", state: "All" };
-
 let epic = {};
 let ikon = {};
 let recommendation = {};
 let snowfallChart = null;
 let resortRows = [];
 
-// ------------------ HELPERS ------------------
-function getEl(id) {
-  const node = document.getElementById(id);
-  return node;
-}
-
+// sets text of the element by its id
 function setText(id, value) {
-  const node = getEl(id);
+  const node = document.getElementById(id);
   if (!node) return;
   node.textContent = (value === null || value === undefined || value === "") ? "—" : value;
 }
 
-
-// ------------------ RENDER ------------------
+//updates all text in html
 function render() {
-  // EPIC
+  // epic
   setText("epic_resorts", epic.resort_count);
   setText("epic_snowfall", epic.avg_snowfall_inches);
   setText("epic_snow_days", epic.avg_snowfall_days);
@@ -32,7 +25,7 @@ function render() {
   setText("epic_trails", epic.avg_trails);
   setText("epic_score", epic.score);
 
-  // IKON
+  // ikon
   setText("ikon_resorts", ikon.resort_count);
   setText("ikon_snowfall", ikon.avg_snowfall_inches);
   setText("ikon_snow_days", ikon.avg_snowfall_days);
@@ -42,46 +35,57 @@ function render() {
   setText("ikon_trails", ikon.avg_trails);
   setText("ikon_score", ikon.score);
 
-  // Recommendation
+  // best pass
   const bestPassText = recommendation.best_pass ? `${recommendation.best_pass} Pass` : "—";
   setText("best_pass", bestPassText);
   setText("best_reason", recommendation.reason);
 }
 
-// ------------------ FETCH ------------------
+//async to continue working while loading data
 async function refreshData() {
+//create url from filters
     const params = new URLSearchParams({
       country: filters.country,
       state: filters.state
     });
   
-    // Summary
+//uses Flask and pauses the server until response is valid, if it fails it returns error
     const resp = await fetch(`/api/region_compare?${params.toString()}`);
     if (!resp.ok) {
       setText("best_pass", "Error");
       setText("best_reason", `API request failed (${resp.status}).`);
       return;
     }
+//converts into json and stores it and calls on render to input it
     const data = await resp.json();
     epic = data.epic || {};
     ikon = data.ikon || {};
     recommendation = data.recommendation || {};
     render();
   
-    // Chart rows
+//calls on function for the chart 
     resortRows = await fetchResortSnowfallRows();
     renderSnowfallChart(resortRows);
   }
 
-// ------------------ EVENTS ------------------
+// reads values in input box, if no value then ALL
 function readFiltersFromUI() {
-  const c = getEl("countrySelect");
-  const s = getEl("stateSelect");
+  const c = document.getElementById("countrySelect");
+  const s = document.getElementById("stateSelect");
 
-  filters.country = c ? c.value : "All";
-  filters.state = s ? s.value : "All";
+  if (c) {
+    filters.country = c.value;
+  } else {
+    filters.country = "All";
+  }
+
+  if (s) {
+    filters.state = s.value;
+  } else {
+    filters.state = "All";
+  }
 }
-
+//async to continue working and now create URL request for chart
 async function fetchResortSnowfallRows() {
     const params = new URLSearchParams({
       country: filters.country,
@@ -98,7 +102,7 @@ function renderSnowfallChart(rows) {
     const canvas = document.getElementById("snowfallChart");
     if (!canvas) return;
   
-    // Build labels as resort names (sorted already from API)
+    // Build labels as resort names already sorted
     const labels = rows.map(r => r.resort_name);
   
     // Split snowfall values into two arrays aligned to labels:
@@ -124,11 +128,10 @@ function renderSnowfallChart(rows) {
         },
         scales: {
           x: {
-            // ticks: { autoSkip: false, maxRotation: 70, minRotation: 70 }
             stacked: false
           },
           y: {
-            title: { display: true, text: "Avg Snowfall (inches)" }
+            title: { display: true, text: "Average Snowfall (in)" }
           }
         }
       }
@@ -136,26 +139,12 @@ function renderSnowfallChart(rows) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  const countrySelect = getEl("countrySelect");
-  const stateSelect = getEl("stateSelect");
-  const btn = getEl("searchBtn");
+//   const countrySelect = document.getElementById("countrySelect");
+//   const stateSelect = document.getElementById("stateSelect");
+  const btn = document.getElementById("searchBtn");
 
   if (btn) {
     btn.addEventListener("click", () => {
-      readFiltersFromUI();
-      refreshData();
-    });
-  }
-
-  // Optional: auto-refresh when dropdown changes
-  if (countrySelect) {
-    countrySelect.addEventListener("change", () => {
-      readFiltersFromUI();
-      refreshData();
-    });
-  }
-  if (stateSelect) {
-    stateSelect.addEventListener("change", () => {
       readFiltersFromUI();
       refreshData();
     });

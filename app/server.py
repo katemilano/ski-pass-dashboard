@@ -19,10 +19,10 @@ def query_db(sql: str, params=()):
 
 @app.get("/")
 def dashboard():
-    # Populate HTML will add an "All" option, allows you to use countries/states in HTML
-    countries = query_db("SELECT DISTINCT country FROM resorts ORDER BY country;")
-    states = query_db("SELECT DISTINCT state_or_province_abbr FROM resorts ORDER BY state_or_province_abbr;")
-    return render_template("dashboard.html", countries=countries, states=states)
+    # Populate HTML allows you to use countries/states in HTML
+    # countries = query_db("SELECT DISTINCT country FROM resorts ORDER BY country;")
+    # states = query_db("SELECT DISTINCT state_or_province_abbr FROM resorts ORDER BY state_or_province_abbr;")
+    return render_template("dashboard.html")
 
 @app.get("/api/region_compare")
 def region_compare():
@@ -47,12 +47,12 @@ def region_compare():
       SELECT
         pass_type,
         COUNT(*) AS resort_count,
-        ROUND(AVG(avg_snowfall_inches), 1) AS avg_snowfall_inches,
-        ROUND(AVG(avg_snowfall_days), 1) AS avg_snowfall_days,
-        ROUND(AVG(season_2023_2024_days), 1) AS avg_season_2023_2024_days,
-        CAST(ROUND(AVG(skiable_acres), 0) AS INT) AS avg_skiable_acres,
-        CAST(ROUND(AVG(vertical_ft), 0) AS INT) AS avg_vertical_ft,
-        CAST(ROUND(AVG(trails), 0) AS INT) AS avg_trails
+        ROUND(AVG(avg_snowfall_inches), 0) AS avg_snowfall_inches,
+        ROUND(AVG(avg_snowfall_days), 0) AS avg_snowfall_days,
+        ROUND(AVG(season_2023_2024_days), 0) AS avg_season_2023_2024_days,
+        ROUND(AVG(skiable_acres), 0) AS avg_skiable_acres,
+        ROUND(AVG(vertical_ft), 0) AS avg_vertical_ft,
+        ROUND(AVG(trails), 0) AS avg_trails
       FROM filtered
       GROUP BY pass_type
     )
@@ -136,7 +136,6 @@ def resorts_snowfall():
     WHERE
       (? = '' OR LOWER(country) = LOWER(?))
       AND (? = '' OR LOWER(state_or_province_abbr) = LOWER(?))
-      AND avg_snowfall_inches IS NOT NULL
     ORDER BY avg_snowfall_inches DESC, resort_name ASC
     LIMIT 10;
     """
